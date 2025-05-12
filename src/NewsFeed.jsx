@@ -14,7 +14,7 @@ const categories = [
 
 
 function NewsFeed() {
-  const API_KEY='d312f8251f2a45d587c91f81f97545d7';
+
   const [selected, setSelected] = useState("Technology");
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,7 +24,7 @@ function NewsFeed() {
     setLoading(true);
     try {
       const res = await axios.get(
-        `https://newsapi.org/v2/everything?q=${category.toLowerCase()}&from=2025-04-12&sortBy=publishedAt&apiKey=${API_KEY}`
+        `https://newsapi.org/v2/everything?q=${category.toLowerCase()}&from=2025-04-12&sortBy=publishedAt&apiKey=d312f8251f2a45d587c91f81f97545d7`
       );
       setArticles(res.data.articles || []);
     } catch (error) {
