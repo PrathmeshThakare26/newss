@@ -12,9 +12,7 @@ const categories = [
   { name: "Technology", icon: "⚡" },
 ];
 
-
 const socket = io("http://localhost:5001");
-
 
 function NewsFeed() {
   const [selected, setSelected] = useState("Technology");
@@ -22,13 +20,11 @@ function NewsFeed() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const fetchArticles = async (query) => {
+  const fetchArticles = async (category) => {
     setLoading(true);
     try {
       const res = await axios.get(
-
         `http://localhost:5001/api/news?category=${category.toLowerCase()}`
-
       );
       setArticles(res.data || []);
     } catch (error) {
@@ -132,7 +128,6 @@ function NewsFeed() {
                 key={index}
                 className="bg-white p-4 rounded-xl shadow hover:shadow-md transition"
               >
-
                 {article.urlToImage || article.image ? (
                   <img
                     src={article.urlToImage || article.image}
@@ -140,7 +135,6 @@ function NewsFeed() {
                     className="w-full h-40 object-cover rounded-md mb-4"
                   />
                 ) : null}
-
                 <h3 className="text-lg font-semibold">{article.title}</h3>
                 <p className="text-sm text-gray-600 mt-2">
                   {article.description}
