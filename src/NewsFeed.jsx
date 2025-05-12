@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import API_KEY from "./constant.mjs";
+
 const categories = [
   { name: "Business", icon: "📈" },
   { name: "Entertainment", icon: "🌟" },
@@ -14,6 +14,7 @@ const categories = [
 
 
 function NewsFeed() {
+  const API_KEY='d312f8251f2a45d587c91f81f97545d7';
   const [selected, setSelected] = useState("Technology");
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
