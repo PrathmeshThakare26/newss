@@ -42,7 +42,7 @@ function NewsFeed() {
       const res = await axios.get(
         `https://gnews.io/api/v4/search?q=${encodeURIComponent(
           searchTerm
-        )}&lang=en&country=us&max=10&apikey=YOUR_GNEWS_API_KEY`
+        )}&lang=en&country=us&max=10&apikey=be4548607fd7d6e2271ac79245486a04`
       );
       setArticles(res.data.articles || []);
     } catch (err) {
