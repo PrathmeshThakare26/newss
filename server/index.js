@@ -6,10 +6,10 @@ const socketIo = require('socket.io');
 const app = express();
 app.use(cors());
 
-const server = http.createServer(app);
+const server = http.createServer(app);  // Use http.createServer to ensure socket.io works properly
 const io = socketIo(server, {
   cors: {
-    origin: '*',
+    origin: '*',  // Allow all origins (adjust for production)
   }
 });
 
@@ -22,12 +22,10 @@ setInterval(() => {
     description: "This is a real-time demo article.",
     publishedAt: new Date().toISOString()
   };
-  io.emit('newNews', sampleNews);
+  io.emit('newNews', sampleNews);  // Emit news to all connected clients
 }, 30000);
 
 const port = 5001;  // Change this to any available port
-app.listen(port, () => {
+server.listen(port, () => {  // Use server.listen instead of app.listen
   console.log(`Server is running on port ${port}`);
 });
-
-
