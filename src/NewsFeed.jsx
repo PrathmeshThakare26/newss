@@ -12,7 +12,7 @@ const categories = [
   { name: "Technology", icon: "⚡" },
 ];
 
-const socket = io("http://localhost:5001");
+const socket = io("https://newss-3v71.onrender.com");
 
 function NewsFeed() {
   const [selected, setSelected] = useState("Technology");
@@ -24,7 +24,7 @@ function NewsFeed() {
     setLoading(true);
     try {
       const res = await axios.get(
-        `http://localhost:5001/api/news?category=${category.toLowerCase()}`
+        `https://newss-3v71.onrender.com/api/news?category=${category.toLowerCase()}`
       );
       setArticles(res.data || []);
     } catch (error) {
