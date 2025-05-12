@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { io } from "socket.io-client";
 
 const categories = [
   { name: "Business", icon: "📈" },
@@ -11,7 +12,9 @@ const categories = [
   { name: "Technology", icon: "⚡" },
 ];
 
-const apikey = "be4548607fd7d6e2271ac79245486a04";
+
+const socket = io("http://localhost:5001");
+
 
 function NewsFeed() {
   const [selected, setSelected] = useState("Technology");
@@ -23,11 +26,11 @@ function NewsFeed() {
     setLoading(true);
     try {
       const res = await axios.get(
-        `https://gnews.io/api/v4/search?q=${encodeURIComponent(
-          query
-        )}&lang=en&country=us&max=10&apikey=${apikey}`
+
+        `http://localhost:5001/api/news?category=${category.toLowerCase()}`
+
       );
-      setArticles(res.data.articles || []);
+      setArticles(res.data || []);
     } catch (error) {
       console.error("Error fetching news:", error);
       setArticles([]);
@@ -36,14 +39,36 @@ function NewsFeed() {
     }
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (!searchTerm.trim()) return;
-    fetchArticles(searchTerm);
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        `https://gnews.io/api/v4/search?q=${encodeURIComponent(
+          searchTerm
+        )}&lang=en&country=us&max=10&apikey=YOUR_GNEWS_API_KEY`
+      );
+      setArticles(res.data.articles || []);
+    } catch (err) {
+      console.error("Search failed:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchArticles(selected);
   }, [selected]);
+
+  useEffect(() => {
+    socket.on("newNews", (news) => {
+      setArticles((prev) => [news, ...prev]);
+    });
+
+    return () => {
+      socket.off("newNews");
+    };
+  }, []);
 
   return (
     <div className="min-h-screen w-full flex flex-col bg-[#f9fbfd] text-gray-800">
@@ -107,13 +132,15 @@ function NewsFeed() {
                 key={index}
                 className="bg-white p-4 rounded-xl shadow hover:shadow-md transition"
               >
-                {article.image && (
+
+                {article.urlToImage || article.image ? (
                   <img
-                    src={article.image}
+                    src={article.urlToImage || article.image}
                     alt={article.title}
                     className="w-full h-40 object-cover rounded-md mb-4"
                   />
-                )}
+                ) : null}
+
                 <h3 className="text-lg font-semibold">{article.title}</h3>
                 <p className="text-sm text-gray-600 mt-2">
                   {article.description}
