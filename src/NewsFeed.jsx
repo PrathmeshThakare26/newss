@@ -11,20 +11,21 @@ const categories = [
   { name: "Technology", icon: "⚡" },
 ];
 
-
+const apikey = "be4548607fd7d6e2271ac79245486a04";
 
 function NewsFeed() {
-
   const [selected, setSelected] = useState("Technology");
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const fetchArticles = async (category) => {
+  const fetchArticles = async (query) => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `https://newsapi.org/v2/everything?q=${category.toLowerCase()}&from=2025-04-12&sortBy=publishedAt&apiKey=d312f8251f2a45d587c91f81f97545d7`
+        `https://gnews.io/api/v4/search?q=${encodeURIComponent(
+          query
+        )}&lang=en&country=us&max=10&apikey=${apikey}`
       );
       setArticles(res.data.articles || []);
     } catch (error) {
@@ -47,8 +48,10 @@ function NewsFeed() {
   return (
     <div className="min-h-screen w-full flex flex-col bg-[#f9fbfd] text-gray-800">
       {/* Header */}
-      <header className="flex justify-between flex-col md:flex-row items-center w-full px-10 py-4 bg-white shadow   md:px-4">
-        <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 mb-4 md:mb-0">NewsPulse</h1>
+      <header className="flex justify-between flex-col md:flex-row items-center w-full px-10 py-4 bg-white shadow md:px-4">
+        <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 mb-4 md:mb-0">
+          NewsPulse
+        </h1>
         <div className="flex items-center">
           <input
             type="text"
@@ -100,14 +103,21 @@ function NewsFeed() {
         ) : articles.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {articles.map((article, index) => (
-              <div key={index} className="bg-white p-4 rounded-xl shadow hover:shadow-md transition">
-                <img
-                  src={article.urlToImage}
-                  alt={article.title}
-                  className="w-full h-40 object-cover rounded-md mb-4"
-                />
+              <div
+                key={index}
+                className="bg-white p-4 rounded-xl shadow hover:shadow-md transition"
+              >
+                {article.image && (
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    className="w-full h-40 object-cover rounded-md mb-4"
+                  />
+                )}
                 <h3 className="text-lg font-semibold">{article.title}</h3>
-                <p className="text-sm text-gray-600 mt-2">{article.description}</p>
+                <p className="text-sm text-gray-600 mt-2">
+                  {article.description}
+                </p>
                 <a
                   href={article.url}
                   target="_blank"
@@ -136,7 +146,6 @@ function NewsFeed() {
       {/* Footer */}
       <footer className="text-center text-sm text-gray-500 py-4 border-t mt-auto">
         <div>© 2025 NewsPulse - Real-time news feed</div>
-        <div className="flex justify-center items-center gap-3 mt-2"></div>
       </footer>
     </div>
   );
